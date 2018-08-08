@@ -19,9 +19,6 @@ export default new Router({
       path: '/home',
       redirect: '/home/orderlist',
       name: 'home',
-      meta: {
-        auth: true
-      },
       component: (resolve) => {
         require(['@/components/home'], resolve)
       },
@@ -32,7 +29,7 @@ export default new Router({
             require(['@/components/orderlist'], resolve)
           },
           meta: {
-            // auth: true
+            require: true
           }
         },
         {
@@ -54,6 +51,16 @@ export default new Router({
       name: 'fromWord',
       component: (resolve) => {
         require(['@/components/HelloFromVux'], resolve)
+      }
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: (resolve) => {
+        require(['@/components/auth'], resolve)
+      },
+      meta: {
+        auth: true
       }
     }
   ]

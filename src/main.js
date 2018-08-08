@@ -5,15 +5,18 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import router from './router'
-import { AjaxPlugin } from 'vux'
+import { WechatPlugin, TransferDom, ToastPlugin, LoadingPlugin } from 'vux'
 import WechatAuth from 'vue-wechat-auth'
+
+Vue.directive('transfer-dom', TransferDom)
 Vue.use(VueRouter)
-Vue.use(AjaxPlugin)
+Vue.use(WechatPlugin)
+Vue.use(ToastPlugin)
+Vue.use(LoadingPlugin)
 // 微信授权插件初始化
-console.log(WechatAuth)
 Vue.use(WechatAuth, {
   router, // 路由实例对象
-  appid: 'wx820c2507051bc1fa', // 您的微信appid
+  appid: 'wxf11003ef5a1af87f', // 您的微信appid
   responseType: 'code',  // 返回类型，请填写code
   scope: 'snsapi_base', // 应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
   getCodeCallback (code, next) {
@@ -25,7 +28,7 @@ Vue.use(WechatAuth, {
     // 参数1为通过code值请求后端获取到的access_token值，如果获取失败请填入空字符串''
     // 参数2(非必填，默认获取access_token切换到当前路由对象)，指定切换对象 next('/') 或者 next({ path: '/' })
     console.log(code)
-    next()
+    // next()
     // AjaxPlugin.get('通过code值换取access_token接口地址', {
     //   params: {
     //     code,
