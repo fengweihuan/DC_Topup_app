@@ -4,8 +4,10 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
+import store from '@/store/index'
 import router from './router'
-import { WechatPlugin, TransferDom, ToastPlugin, LoadingPlugin } from 'vux'
+import axios from '@/axios/index'
+import { WechatPlugin, TransferDom, ToastPlugin, LoadingPlugin, AlertPlugin } from 'vux'
 import WechatAuth from 'vue-wechat-auth'
 
 Vue.directive('transfer-dom', TransferDom)
@@ -13,6 +15,7 @@ Vue.use(VueRouter)
 Vue.use(WechatPlugin)
 Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
+Vue.use(AlertPlugin)
 // 微信授权插件初始化
 Vue.use(WechatAuth, {
   router, // 路由实例对象
@@ -27,8 +30,9 @@ Vue.use(WechatAuth, {
     // next说明：next方法接收两个参数
     // 参数1为通过code值请求后端获取到的access_token值，如果获取失败请填入空字符串''
     // 参数2(非必填，默认获取access_token切换到当前路由对象)，指定切换对象 next('/') 或者 next({ path: '/' })
-    console.log(code)
-    // next()
+    // console.log(code)
+    window.localStorage.setItem('openid', 'ogCRE53C27579ux_xWbWYJFZRJkc')
+    next('/')
     // AjaxPlugin.get('通过code值换取access_token接口地址', {
     //   params: {
     //     code,
@@ -48,12 +52,28 @@ Vue.use(WechatAuth, {
   }
 })
 
+// 路由拦截
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
+})
+router.afterEach((to, from) => {
+  let userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
+  if (!userInfo.phone && to.matched.some(record => record.meta.tips)) {
+    router.app.$children[0].show = true
+  }
+})
+
 FastClick.attach(document.body)
+Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app-box')

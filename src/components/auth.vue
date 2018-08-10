@@ -9,6 +9,9 @@ export default {
     return {
   
     }
+  },
+  created () {
+    console.log('这是auth页面')
   }
 }
 </script>

@@ -29,19 +29,31 @@ export default new Router({
             require(['@/components/orderlist'], resolve)
           },
           meta: {
-            require: true
+            title: '订单列表',
+            require: true,
+            tips: true
           }
         },
         {
           path: 'member',
           component: (resolve) => {
             require(['@/components/member'], resolve)
+          },
+          meta: {
+            title: '会员中心',
+            require: true,
+            tips: true
           }
         },
         {
           path: 'mine',
           component: (resolve) => {
             require(['@/components/mine'], resolve)
+          },
+          meta: {
+            title: '个人信息',
+            require: true,
+            tips: false
           }
         }
       ]

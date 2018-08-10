@@ -2,16 +2,19 @@
   <div class="hello">
     <router-view></router-view>
     <tabbar>
-      <tabbar-item selected show-dot link="/home/orderlist">
-        <!-- <img slot="icon" src="../assets/demo/icon_nav_msg.png"> -->
+      <tabbar-item :selected ="homeTab === 'list'"  link="/home/orderlist">
+        <img slot="icon" src="../assets/list.png">
+        <img slot="icon-active" src="../assets/list_active.png">
         <span slot="label">订单列表</span>
       </tabbar-item>
-      <tabbar-item  link="/home/member">
-        <!-- <img slot="icon" src="../assets/demo/icon_nav_article.png"> -->
+      <tabbar-item  :selected ="homeTab === 'member'" link="/home/member">
+        <img slot="icon" src="../assets/member.png">
+        <img slot="icon-active" src="../assets/member_active.png">
         <span slot="label">会员</span>
       </tabbar-item>
-      <tabbar-item badge="2" link="/home/mine">
-        <!-- <img slot="icon" src="../assets/demo/icon_nav_cell.png"> -->
+      <tabbar-item :selected ="homeTab === 'mine'"  link="/home/mine">
+        <img slot="icon" src="../assets/mine.png">
+        <img slot="icon-active" src="../assets/mine_active.png">
         <span slot="label">个人中心</span>
       </tabbar-item>
     </tabbar>
@@ -20,6 +23,7 @@
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell } from 'vux'
+import { mapState } from 'vuex'
 export default {
   components: {
     Tabbar,
@@ -32,6 +36,11 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  computed: {
+    ...mapState({
+      homeTab: state => state.homeTab
+    })
   },
   methods: {
     test () {

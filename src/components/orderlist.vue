@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -13,7 +14,8 @@ export default {
     }
   },
   created () {
-    console.log(this.$wechat)
+    this.changeHomeTab('list')
+    // console.log(this.$wechat)
     this.$wechat.getNetworkType({
       success (res) {
         let networkType = res.networkType // 返回网络类型2g，3g，4g，wifi
@@ -23,6 +25,9 @@ export default {
     // this.$http.post('/api').then(({data}) => {
     //   console.log(data)
     // })
+  },
+  methods: {
+    ...mapMutations(['changeHomeTab'])
   }
 }
 </script>
