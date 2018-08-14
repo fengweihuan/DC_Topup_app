@@ -1,16 +1,34 @@
 <template>
 <div class="orderlist">
-    订单列表
-    <router-link tag="p" to="/fromWord">呵呵达</router-link>
+    <!-- 订单列表 -->
+    <!-- <router-link tag="p" to="/fromWord">呵呵达</router-link> -->
+    <tab :line-width=2  v-model="index" custom-bar-width="50px"	>
+      <tab-item class="vux-center" :selected="demo2 === item" v-for="(item, index) in list" @click="demo2 = item" :key="index">{{item}}</tab-item>
+    </tab>
+    <swiper v-model="index" height="100px" :show-dots="false">
+      <swiper-item v-for="(item, index) in list" :key="index">
+        <div class="tab-swiper vux-center">{{item}} Container</div>
+      </swiper-item>
+    </swiper>
   </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
+import { Tab, TabItem, Swiper, SwiperItem } from 'vux'
+const getlist = () => ['订单列表', '我的订单']
 export default {
+  components: {
+    Tab,
+    TabItem,
+    Swiper,
+    SwiperItem
+  },
   data () {
     return {
-
+      index: 0,
+      demo2: '订单列表',
+      list: getlist(),
     }
   },
   created () {
@@ -27,7 +45,10 @@ export default {
     // })
   },
   methods: {
-    ...mapMutations(['changeHomeTab'])
+    ...mapMutations(['changeHomeTab']),
+    onItemClick (index) {
+      console.log('on item click:', index)
+    },
   }
 }
 </script>

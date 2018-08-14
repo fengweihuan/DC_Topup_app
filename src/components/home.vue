@@ -3,18 +3,18 @@
     <router-view></router-view>
     <tabbar>
       <tabbar-item :selected ="homeTab === 'list'"  link="/home/orderlist">
-        <img slot="icon" src="../assets/list.png">
-        <img slot="icon-active" src="../assets/list_active.png">
+        <img slot="icon" class="iconImg" src="../assets/list.png">
+        <img slot="icon-active" class="iconImg" src="../assets/list_active.png">
         <span slot="label">订单列表</span>
       </tabbar-item>
       <tabbar-item  :selected ="homeTab === 'member'" link="/home/member">
-        <img slot="icon" src="../assets/member.png">
-        <img slot="icon-active" src="../assets/member_active.png">
+        <img slot="icon" class="iconImg" src="../assets/member.png">
+        <img slot="icon-active" class="iconImg" src="../assets/member_active.png">
         <span slot="label">会员</span>
       </tabbar-item>
       <tabbar-item :selected ="homeTab === 'mine'"  link="/home/mine">
-        <img slot="icon" src="../assets/mine.png">
-        <img slot="icon-active" src="../assets/mine_active.png">
+        <img slot="icon" class="iconImg" src="../assets/mine.png">
+        <img slot="icon-active" class="iconImg" src="../assets/mine_active.png">
         <span slot="label">个人中心</span>
       </tabbar-item>
     </tabbar>
@@ -65,5 +65,9 @@ li {
 }
 a {
   color: #42b983;
+}
+.iconImg{
+  height: 24px;
+  width: 24px;
 }
 </style>
