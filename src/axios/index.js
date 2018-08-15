@@ -11,7 +11,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
 	//  在发送请求之前做某件事
 	if (localStorage.token) {
-		config.headers['X-Token'] = window.localStorage.token
+		config.headers['authorization'] = window.localStorage.token
 	}
 		Vue.$vux.loading.show({
 			text: '加载中'
@@ -26,10 +26,9 @@ service.interceptors.request.use(config => {
 	return Promise.reject(error)
 })
 service.interceptors.response.use(data => {
-	clearTimeout(timer)
 	Vue.$vux.loading.hide();
 	let res = data.data
-	if (res.status === 1200) {
+	if (res.errno === 1200) {
 		Vue.$vux.confirm.show({
 			title: '提示',
 			content: `账号信息失效，是否重新登录？`,
@@ -39,10 +38,10 @@ service.interceptors.response.use(data => {
 				router.replace('/auth')
 			}
 		})
-	} else if (res.status !== 0) {
+	}else if (res.errno !== 0) {
 		Vue.$vux.alert.show({
 			title: '提示',
-			content: res.msg
+			content: res.data
 		})
 	}
 	return data

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import storge from '@/utils/storge'
 import { Confirm, XInput, XButton } from 'vux'
 import { setInterval, clearInterval } from 'timers'
 export default {
@@ -46,19 +47,28 @@ export default {
     XButton
   },
   created () {
-    // console.log(window.localStorage.openid)
-    let openid = window.localStorage.getItem('openid')
+    let openid = storge.getItem('openid')
     console.log(openid)
     if (!openid) {
       // this.$router.push('/auth')
     }
-    this.getUserInfo()
+    // this.getUserInfo()
   },
   methods: {
-    onConfirm (value) {
-      console.log(this.proving)
-      console.log('onConfirm')
+    async onConfirm (value) {
+      this.show = false
       // 发送校验验证吗ajax
+      let res = await this.$http.post('customer/login', {
+        customer_mobile: this.phone,
+        sms_code: this.proving
+      })
+      console.log(res)
+      if(res.data.errno === 0) {
+        this.$vux.toast.show({
+          text: '注册成功'
+        })
+        this.getUserInfo()
+      }
     },
     onHide () {
       // console.log('onHide')
@@ -93,13 +103,19 @@ export default {
       console.log(res)
     },
     // 获取用户信息
-    getUserInfo () {
+    async getUserInfo () {
       // ajax获取用户信息
-      let userInfo = {
-        userName: '冯卫环',
-        userAwater: 'http://p949rmsaf.bkt.clouddn.com/QQ%E5%9B%BE%E7%89%8720180516101622.jpg'
+      let res = await this.$http.get('customer/info' )
+      console.log(res)
+      if(res.data.errno === 0) {
+        let userInfo = {
+          customer_mobile: res.data.data.customer_mobile,
+          customer_name: res.data.data.customer_nickname ,
+          customer_avatar: res.data.data.customer_avatar 
+        }
+        storge.setItem('userInfo', userInfo)
+        console.log(storge.getItem('userInfo'))
       }
-      window.localStorage.setItem('userInfo', JSON.stringify(userInfo))
     }
   }
 }

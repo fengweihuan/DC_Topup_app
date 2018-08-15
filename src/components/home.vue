@@ -10,7 +10,7 @@
       <tabbar-item  :selected ="homeTab === 'member'" link="/home/member">
         <img slot="icon" class="iconImg" src="../assets/member.png">
         <img slot="icon-active" class="iconImg" src="../assets/member_active.png">
-        <span slot="label">会员</span>
+        <span slot="label">优惠券</span>
       </tabbar-item>
       <tabbar-item :selected ="homeTab === 'mine'"  link="/home/mine">
         <img slot="icon" class="iconImg" src="../assets/mine.png">

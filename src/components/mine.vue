@@ -15,17 +15,29 @@
         </p>
         <p class="user_list" style="margin-top:30px">
           <span class="user_img"><img src="../assets/phone.png" alt=""></span>
-          <span class="user_tel user_text">{{phone ? phone : '暂无'}}</span><span @click.prevent="bindClick" class="tobinding" v-if="!phone">去绑定</span></p>
+          <span class="user_tel user_text">{{phone ? hidePhone(phone) : '暂无'}}</span><span @click.prevent="bindClick" class="tobinding" v-if="!phone">去绑定</span></p>
           
       </div>
     </div>
-    <div class="tips">暂无更多</div>
+    <div class="banner banner1" >
+      <div class="ban_l" style="flex: 1">
+        <p>账户余额</p>
+        <p>{{ wallet_balance }}元</p>
+      </div>
+      <div class="ban_r" style="margin-right: 20px">
+        <x-button type="primary" v-if="wallet_balance - 0 >= 5">提现</x-button>
+        <x-button  v-else>满5元可提现</x-button>
+      </div>
+    </div>
+    <!-- <div class="tips">暂无更多</div> -->    
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex' 
+import storge from '@/utils/storge'
 import VipImg from '@/assets/vip.png'
 import NovipImg from '@/assets/novip.png'
+import awaterImg from '@/assets/awater.png'
 export default {
   data () {
     return {
@@ -33,19 +45,32 @@ export default {
       phone: '',
       userAwater: '',
       isVip: false,
-      vipImg: NovipImg
+      vipImg: NovipImg,
+      wallet_balance: ''
     }
   },
   created () {
     this.changeHomeTab('mine')
-    let userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
-    this.userName = userInfo.userName
-    this.userAwater = userInfo.userAwater
-    this.phone = userInfo.phone
+    this.getUserInfo()
   },
   methods: {
+    hidePhone (phone) {
+      return phone.slice(0, 3) + '****' + phone.slice(-4)
+    },
     bindClick () {
       this.$router.app.$children[0].show = true
+    },
+    // 获取用户信息
+    async getUserInfo () {
+      // ajax获取用户信息
+      let res = await this.$http.get('customer/info' )
+      console.log(res)
+      if(res.data.errno === 0) {
+        this.userName = res.data.data.customer_name ? res.data.data.customer_name : '未知'
+        this.userAwater = res.data.data.customer_avatar ? res.data.data.customer_avatar : awaterImg
+        this.phone = res.data.data.customer_mobile + '',
+        this.wallet_balance = res.data.data.wallet_balance ? res.data.data.wallet_balance : ''
+      }
     },
     ...mapMutations(['changeHomeTab'])
   },
@@ -70,6 +95,12 @@ export default {
       color: #fff;
       padding: 20px 15px;
       display: flex;
+      &.banner1 {
+        background-color: #fff;
+        margin-top: 20px;
+        padding: 30px 15px;
+        color: #666
+      }
     }
     .awater{
       width: 50px;

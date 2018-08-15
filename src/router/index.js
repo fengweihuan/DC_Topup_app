@@ -40,7 +40,7 @@ export default new Router({
             require(['@/components/member'], resolve)
           },
           meta: {
-            title: '会员中心',
+            title: '领券中心',
             require: true,
             tips: true
           }
