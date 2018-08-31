@@ -4,7 +4,7 @@ import router from '../router'
 
 //  创建axios实例
 const service = axios.create({
-	baseURL: 'http://54.222.241.129:8360/wxapp/',
+	baseURL: 'http://54.223.97.251:8360/wxapp/',
 	timeout: 20000
 })
 //  request拦截器
