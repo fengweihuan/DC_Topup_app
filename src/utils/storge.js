@@ -5,6 +5,7 @@ function getItem(key) {
 }
 
 function setItem(key, value) {
+  if(value == undefined || value == null) return false
   let val = typeof value === 'object' ? JSON.stringify(value) : value
   window.localStorage.setItem(key, val)
 }

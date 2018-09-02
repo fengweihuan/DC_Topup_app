@@ -9,7 +9,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : require('../config/prod.env')
@@ -39,7 +41,8 @@ const webpackConfig = merge(baseWebpackConfig, {
         warnings: false
       },
       sourceMap: config.build.productionSourceMap,
-      parallel: true
+      parallel: true,
+      include: [resolve('./node_modules/vue-wechat-auth')]
     }),
     // extract css into its own file
     new ExtractTextPlugin({

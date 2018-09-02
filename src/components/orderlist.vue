@@ -13,7 +13,7 @@
           :pullup="true"
           @scrollToEnd="scrollToEnd">
           <div class="tab-swiper vux-center">
-            <div class="tab_list vux-1px-b" v-for="(list, index1) in listData[index]" :key="index1">
+            <div class="tab_list vux-1px-b" :class="'tab' + index" v-for="(list, index1) in listData[index]" :key="index1">
               <p class="list_no">订单编号:  {{ list.order_code }}</p>
               <p class="list_name">{{list.order_receiver ? list.order_receiver : '未知姓名'}}</p>
               <p>手机号码:  {{ list.mobile_no ? hidePhone(list.mobile_no) : '未知' }}</p>
@@ -52,7 +52,6 @@ export default {
   },
   created () {
     this.changeHomeTab('list')
-    console.log()
     this.scrollHeight = window.innerHeight - 44 - 53 + 'px' 
     getlist().forEach((list, index, arr) => {
       this['pageIndex' + index] = 0
@@ -95,6 +94,7 @@ export default {
         this.$vux.toast.show({
           text: '接单成功'
         })
+        this.getListData(0)
       }
     },
     async getListData(index) {
@@ -105,13 +105,17 @@ export default {
       }
       pageIndex ++
       let url = index === 0 ? 'order/list': 'order/history'
-      let res = await this.$http.get(url)
+      let res = await this.$http.get(url, {
+        params: {
+          current_page: pageIndex,
+          number_per_page: 20
+        }
+      })
       // console.log(res)
       if(res.data.errno === 0) {
-        this.listData[index].push(...res.data.data)
-        this.listData[index].push(...res.data.data)
-        this.listData[index].push(...res.data.data)
-        this.listData[index].push(...res.data.data)
+        this['pageIndex' + index] = res.data.data.currentPage
+        this['totalPage' + index] = res.data.data.totalPages
+        this.listData[index].push(...res.data.data.data)
       }
     }
   }
@@ -126,6 +130,11 @@ export default {
       padding:  15px 0px;
       position: relative;
       color: #666;
+      &.tab1{
+        p{
+          width: 100%;
+        }
+      }
       p{
         white-space: nowrap;
         width: 56vw;

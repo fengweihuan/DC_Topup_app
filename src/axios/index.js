@@ -1,17 +1,20 @@
 import axios from 'axios'
 import Vue from 'vue'
+import storge from '../utils/storge'
 import router from '../router'
 
 //  创建axios实例
 const service = axios.create({
-	baseURL: 'http://54.223.97.251:8360/wxapp/',
+	baseURL: process.env.BASE_API,
 	timeout: 20000
 })
 //  request拦截器
 service.interceptors.request.use(config => {
 	//  在发送请求之前做某件事
-	if (localStorage.token) {
-		config.headers['authorization'] = window.localStorage.token
+	let token = storge.getItem('token')
+	console.log(token)
+	if (token) {
+		config.headers['authorization'] = token
 	}
 		Vue.$vux.loading.show({
 			text: '加载中'
@@ -41,7 +44,7 @@ service.interceptors.response.use(data => {
 	}else if (res.errno !== 0) {
 		Vue.$vux.alert.show({
 			title: '提示',
-			content: res.data
+			content:  res.data ? res.data : res.errmsg
 		})
 	}
 	return data

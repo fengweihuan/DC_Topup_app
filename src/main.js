@@ -20,10 +20,11 @@ Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(AlertPlugin)
 // 微信授权插件初始化
-storge.setItem('token', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
+// storge.setItem('token', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
+// storge.setItem('openid', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
 Vue.use(WechatAuth, {
   router, // 路由实例对象
-  appid: 'wxf11003ef5a1af87f', // 您的微信appid
+  appid: 'wx820c2507051bc1fa', // 您的微信appid
   responseType: 'code',  // 返回类型，请填写code
   scope: 'snsapi_base', // 应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
   getCodeCallback (code, next) {
@@ -35,9 +36,22 @@ Vue.use(WechatAuth, {
     // 参数1为通过code值请求后端获取到的access_token值，如果获取失败请填入空字符串''
     // 参数2(非必填，默认获取access_token切换到当前路由对象)，指定切换对象 next('/') 或者 next({ path: '/' })
     // console.log(code)
-    storge.setItem('openid', 'ogCRE53C27579ux_xWbWYJFZRJkc')
-    storge.setItem('token', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
-    next('/')
+    console.log(code)
+    axios.post('wechat/token', {
+      wx_code: code
+    })
+      .then((res) => {
+        console.log(res.data)
+        if (res.data.errno === 0 && res.data.data.openid && res.data.data.access_token) {
+          storge.setItem('openid', res.data.data.openid)
+          storge.setItem('token', res.data.data.openid)
+        next('/')
+      } else {
+        next()
+      }
+    }).catch(error => {
+      next()
+    })
     // AjaxPlugin.get('通过code值换取access_token接口地址', {
     //   params: {
     //     code,
@@ -60,9 +74,10 @@ Vue.use(WechatAuth, {
 // 路由拦截
 router.beforeEach((to, from, next) => {
   let openid = storge.getItem('openid')
-  // console.log(openid)
-  if (!openid) {
-    // this.$router.push('/auth')
+  console.log(!openid)
+  console.log(to)
+  if (!openid && to.name !== 'auth') {
+    next('/auth')
   }
   if (to.meta.title) {
     document.title = to.meta.title
@@ -70,9 +85,9 @@ router.beforeEach((to, from, next) => {
   next()
 })
 router.afterEach((to, from) => {
-  let userInfo = storge.getItem('userInfo')
-  console.log(userInfo)
-  if (!userInfo || !userInfo.customer_mobile && to.matched.some(record => record.meta.tips)) {
+  let isLogin = storge.getItem('isLogin')
+  console.log(isLogin)
+  if (isLogin !== 'yes' && to.matched.some(record => record.meta.tips)) {
     router.app.$children[0].show = true
   }
 })

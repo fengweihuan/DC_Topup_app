@@ -5,7 +5,9 @@
       title="绑定手机"
       @on-confirm="onConfirm"
       :close-on-confirm="false"
-      @on-hide="onHide">
+      @on-hide="onHide"
+      mask-z-index = "999"
+      class="confirm_content">
         <div style="text-align:center;" >
           <div class=" tel_input">
             <x-input v-model="phone" placeholder="请填写手机号码" required is-type="china-mobile" type='number'></x-input>
@@ -38,7 +40,7 @@ export default {
       proving: '',
       provingType: 'primary',
       provingDisabled: false,
-      provingText: '获取验证码'
+      provingText: '获取验证'
     }
   },
   components: {
@@ -48,11 +50,9 @@ export default {
   },
   created () {
     let openid = storge.getItem('openid')
-    console.log(openid)
-    if (!openid) {
-      // this.$router.push('/auth')
-    }
-    // this.getUserInfo()
+    // if (!openid) {
+    //   this.$router.push('/auth')
+    // }
   },
   methods: {
     async onConfirm (value) {
@@ -67,6 +67,7 @@ export default {
         this.$vux.toast.show({
           text: '注册成功'
         })
+        storge.setItem('isLogin', 'yes')
         this.getUserInfo()
       }
     },
@@ -89,7 +90,7 @@ export default {
         if (this.provingText <= 0) {
           this.provingType = 'primary'
           this.provingDisabled = false
-          this.provingText = '获取验证码'
+          this.provingText = '获取验证'
           clearInterval(timer)
         } else {
           this.provingText -- 
@@ -99,8 +100,11 @@ export default {
     // 发送手机号码
     async sendPhone () {
       // console.log(this.$http)customer_mobile: this.phone
-      let res = await this.$http.get('customer/login?customer_mobile=' )
-      console.log(res)
+      // let res = await this.$http.get('customer/login?customer_mobile=' + this.phone)
+      let res = await this.$http.post('customer/sms',{
+        customer_mobile: this.phone,
+        sms_template: 'check_code'
+      })
     },
     // 获取用户信息
     async getUserInfo () {

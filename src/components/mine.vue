@@ -15,17 +15,17 @@
         </p>
         <p class="user_list" style="margin-top:30px">
           <span class="user_img"><img src="../assets/phone.png" alt=""></span>
-          <span class="user_tel user_text">{{phone ? hidePhone(phone) : '暂无'}}</span><span @click.prevent="bindClick" class="tobinding" v-if="!phone">去绑定</span></p>
+          <span class="user_tel user_text">{{phone && isLogin === 'yes' ? hidePhone(phone) : '暂无'}}</span><span @click.prevent="bindClick" class="tobinding" v-if="isLogin !== 'yes'">去绑定</span></p>
           
       </div>
     </div>
     <div class="banner banner1" >
       <div class="ban_l" style="flex: 1">
         <p>账户余额</p>
-        <p>{{ wallet_balance }}元</p>
+        <p>{{ wallet_balance / 1000 }}元</p>
       </div>
       <div class="ban_r" style="margin-right: 20px">
-        <x-button type="primary" v-if="wallet_balance - 0 >= 5">提现</x-button>
+        <x-button type="primary" v-if="wallet_balance - 0 >= 5" @click.native="withdrawHandle">提现</x-button>
         <x-button  v-else>满5元可提现</x-button>
       </div>
     </div>
@@ -46,7 +46,8 @@ export default {
       userAwater: '',
       isVip: false,
       vipImg: NovipImg,
-      wallet_balance: ''
+      wallet_balance: '',
+      isLogin: storge.getItem('isLogin')
     }
   },
   created () {
@@ -60,6 +61,13 @@ export default {
     bindClick () {
       this.$router.app.$children[0].show = true
     },
+    withdrawHandle() {
+      console.log(22)
+      this.$vux.alert.show({
+        title: '提示',
+        content: '请回复公众号“提现”进行提现操作，自动提现功能将于近期开通。',
+      })
+    },
     // 获取用户信息
     async getUserInfo () {
       // ajax获取用户信息
@@ -68,7 +76,7 @@ export default {
       if(res.data.errno === 0) {
         this.userName = res.data.data.customer_name ? res.data.data.customer_name : '未知'
         this.userAwater = res.data.data.customer_avatar ? res.data.data.customer_avatar : awaterImg
-        this.phone = res.data.data.customer_mobile + '',
+        this.phone = res.data.data.customer_mobile,
         this.wallet_balance = res.data.data.wallet_balance ? res.data.data.wallet_balance : ''
       }
     },
