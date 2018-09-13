@@ -52,6 +52,7 @@ export default {
   },
   created () {
     this.changeHomeTab('list')
+    this.tabindex = this.$route.query.tabindex == 1 ? 1 : 0
     this.scrollHeight = window.innerHeight - 44 - 53 + 'px' 
     getlist().forEach((list, index, arr) => {
       this['pageIndex' + index] = 0

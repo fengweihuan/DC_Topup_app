@@ -79,6 +79,9 @@ export default {
         this.phone = res.data.data.customer_mobile,
         this.wallet_balance = res.data.data.wallet_balance ? res.data.data.wallet_balance : ''
       }
+      if(this.$route.query.handle == 'extract' && this.wallet_balance > 5){
+        this.withdrawHandle()
+      }
     },
     ...mapMutations(['changeHomeTab'])
   },
