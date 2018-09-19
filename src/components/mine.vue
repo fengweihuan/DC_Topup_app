@@ -25,7 +25,7 @@
         <p>{{ wallet_balance / 1000 }}元</p>
       </div>
       <div class="ban_r" style="margin-right: 20px">
-        <x-button type="primary" v-if="wallet_balance - 0 >= 5" @click.native="withdrawHandle">提现</x-button>
+        <x-button type="primary" v-if="wallet_balance - 0 >= 500" @click.native="withdrawHandle">提现</x-button>
         <x-button  v-else>满5元可提现</x-button>
       </div>
     </div>

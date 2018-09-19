@@ -131,7 +131,7 @@ export default {
 @import './style/base.less';
 
 body {
-  background-color: #fbf9fe;
+  background-color: #fff;
   .register{
     .tel_input{
       border-radius: 6px;
