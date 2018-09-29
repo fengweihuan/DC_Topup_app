@@ -20,8 +20,8 @@ Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(AlertPlugin)
 // 微信授权插件初始化
-// storge.setItem('token', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
-// storge.setItem('openid', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
+storge.setItem('token', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
+storge.setItem('openid', 'or7MpwLnYFHym7hq2XEa6B_tazUk')
 Vue.use(WechatAuth, {
   router, // 路由实例对象
   appid: 'wx820c2507051bc1fa', // 您的微信appid

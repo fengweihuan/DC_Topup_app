@@ -4,5 +4,5 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  BASE_API: '"http://52.80.242.26:8360/cms/"',
+  BASE_API: '"http://api.mcreate.club:8360/wxapp/"',
 })

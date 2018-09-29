@@ -18,6 +18,7 @@
               <p class="list_name">{{list.order_receiver ? list.order_receiver : '未知姓名'}}</p>
               <p>手机号码:  {{ list.mobile_no ? hidePhone(list.mobile_no) : '未知' }}</p>
               <x-button v-if="index === 0" :type=" list.order_status === 'new' ? 'primary' : ''" class="receive" @click.native="receiveHandle(list)">接单</x-button>
+              <x-button v-else  class="receive" :type=" list.order_status === 'new' ? 'primary' : ''" @click.native="finishHandle(list)">{{ computedstatus(list) }}</x-button>
             </div>
             <p class="tips" v-if="listData[index].length === 0">暂无数据！</p>
           </div>
@@ -98,6 +99,34 @@ export default {
         this.getListData(0)
       }
     },
+    // 完成订单
+    async finishHandle (row) {
+      console.log(row)
+      let res = await this.$http.post('order/end', {
+        order_id: row.order_id + '',
+        update_action: 'cancel'
+      })
+      if(res.data.errno === 0) {
+        this.$vux.toast.show({
+          text: '取消成功'
+        })
+        if (this.totalPage1 > 1) this.totalPage1 -= 1
+        this.getListData(1)
+      }
+    },
+    computedstatus (row) {
+      switch (row.order_status) {
+        case 'new':
+          return '取消订单'
+          break;
+        case 'cancel':
+          return '已取消'
+          break;
+        default:
+          return '已完成'
+          break;
+      }
+    },
     async getListData(index) {
       let pageIndex = this['pageIndex' + index]
       let totalPage = this['totalPage' + index] 
@@ -112,7 +141,7 @@ export default {
           number_per_page: 20
         }
       })
-      // console.log(res)
+      console.log(res.data.data)
       if(res.data.errno === 0) {
         this['pageIndex' + index] = res.data.data.currentPage
         this['totalPage' + index] = res.data.data.totalPages
@@ -131,7 +160,7 @@ export default {
       padding:  15px 0px;
       position: relative;
       color: #666;
-      &.tab1{
+      &{
         p{
           width: 100%;
         }
